@@ -1,0 +1,120 @@
+23/5/2024
+
+********************how many users are active
+[
+  {
+    $match:{
+     age:20
+  
+    } 
+  } 
+]
+
+************************what is the average number of tag per user ? --> tag inside array
+[
+  {
+ // Unwind the tags array
+   $unwind:"$tags" 
+  },
+  {
+//***********************8Group by user and count the number of tags
+    $group:
+      {
+        _id:"$_id",
+        numberOfTags:{
+          $sum:1
+        }
+      },
+    {
+    // Group again to calculate the average number of tags per user
+      $group: {
+        _id: null,
+        averageNumberOftags:{
+          $avg:"numberOfTags"
+        }
+      }
+    }
+  }
+]
+
+***********************how many user have 'enim' as one of their tags 
+[
+  {
+    $match: {
+      tags:"enim"
+    }
+  },
+  {
+      $count: 'userwithEnimTag'
+  }
+]
+result-->
+{
+  "userwithEnimTag": 62
+}
+
+
+**********************how many names and age of users who are inactive and have 'velit' as a tag?
+ 
+[
+  {
+    $match: {
+      isActive: false,
+      tags: "velit",
+      age: 20,
+    },
+  },
+  {
+    $project: {
+      name:1,
+      age:1,
+    },
+  },
+]
+
+
+result :--
+{
+  "_id": {
+    "$oid": "664f1576628fbfb79716726e"
+  },
+{  "name": "Aurelia Gonzales",
+  "age": 20
+}
+}
+
+
+who has registered the most recently ?
+[
+  {
+    $sort: {
+      registered:-1
+    }
+  },
+  {$limit: :4},
+  {
+    $project:{
+      name:1,
+      registered:1,
+      favoriteFruit:1
+    }
+  }
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
